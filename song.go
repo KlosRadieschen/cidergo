@@ -1,4 +1,6 @@
-package main
+package cidergo
+
+import "encoding/json"
 
 type Artwork struct {
 	URL    string `json:"url"`
@@ -42,4 +44,21 @@ type Song struct {
 	InLibrary   bool `json:"inLibrary"`
 	ShuffleMode int  `json:"shuffleMode"`
 	RepeatMode  int  `json:"repeatMode"`
+}
+
+func CurrentSong() (Song, error) {
+	jsonData, err := jsonRequest("now-playing")
+	if err != nil {
+		return Song{}, err
+	}
+
+	var data struct {
+		Song Song `json:"info"`
+	}
+	err = json.Unmarshal(jsonData, &data)
+	if err != nil {
+		return Song{}, err
+	}
+
+	return data.Song, nil
 }

@@ -1,4 +1,4 @@
-package main
+package cidergo
 
 type ItemType string
 

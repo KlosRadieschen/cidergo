@@ -1,4 +1,4 @@
-package main
+package cidergo
 
 import (
 	"encoding/json"
