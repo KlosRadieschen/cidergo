@@ -2,25 +2,34 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
-	"log"
-	"net/http"
 )
 
-type Remote struct {
-	port string
-}
-
-func (r *Remote) CheckConnection() error {
-	_, err := statusRequest(r.port, "active")
-
+func CheckConnection() error {
+	_, err := statusRequest("active")
 	return err
 }
 
-func (r *Remote) CurrentSong() (Song, error) {
-	jsonData, err := jsonRequest(r.port, "now-playing")
+func isPlaying() (bool, error) {
+	jsonData, err := jsonRequest("is-playing")
+	if err != nil {
+		return false, err
+	}
+
+	unmarshal := make(map[string]any)
+	err = json.Unmarshal(jsonData, &unmarshal)
+	if err != nil {
+		return false, err
+	}
+
+	return unmarshal["is_playing"] == true, nil
+}
+
+func CurrentSong() (Song, error) {
+	jsonData, err := jsonRequest("now-playing")
+	if err != nil {
+		return Song{}, err
+	}
 
 	var data struct {
 		Song Song `json:"info"`
@@ -33,55 +42,54 @@ func (r *Remote) CurrentSong() (Song, error) {
 	return data.Song, nil
 }
 
-func Connect(port string) (*Remote, error) {
-	if port == "" {
-		port = "10767"
-	}
+/*
 
-	r := Remote{port: port}
+	POST requests
 
-	return &r, r.CheckConnection()
+*/
+
+func PlayURL(url string) error {
+	data := map[string]string{"url": url}
+	jsonData, _ := json.Marshal(data)
+
+	return postRequest("play-url", jsonData)
 }
 
-func statusRequest(port string, endpoint string) (int, error) {
-	resp, err := http.Get(fmt.Sprintf("http://0.0.0.0:%s/api/v1/playback/%s", port, endpoint))
-	if err != nil {
-		return 0, err
-	} else if resp.StatusCode == 404 {
-		return 0, errors.New(fmt.Sprintf("endpoint /%s not found", endpoint))
-	}
-	defer resp.Body.Close()
+func PlayWithHref(href string) error {
+	data := map[string]string{"href": href}
+	jsonData, _ := json.Marshal(data)
 
-	return resp.StatusCode, nil
+	return postRequest("play-item-href", jsonData)
 }
 
-func jsonRequest(port string, endpoint string) ([]byte, error) {
-	resp, err := http.Get(fmt.Sprintf("http://0.0.0.0:%s/api/v1/playback/%s", port, endpoint))
-	if err != nil {
-		return []byte{}, err
-	} else if resp.StatusCode == 404 {
-		return []byte{}, errors.New(fmt.Sprintf("endpoint /%s not found", endpoint))
+func PlayItem(itemType ItemType, id string) error {
+	data := map[string]string{
+		"type": string(itemType),
+		"id":   id,
 	}
-	defer resp.Body.Close()
+	jsonData, _ := json.Marshal(data)
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalf("Failed to read response body: %v", err)
-	}
-
-	return body, nil
+	return postRequest("play-item", jsonData)
 }
 
+func JumpTo(seconds int) error {
+	data := map[string]int{"position": seconds}
+	jsonData, _ := json.Marshal(data)
+
+	return postRequest("seek", jsonData)
+}
+
+func AddCurrentSongToLibrary() error {
+	return postRequestNoJson("add-to-library")
+}
+
+/*
+
+	TESTING
+
+*/
+
+// testing only
 func main() {
-	r, err := Connect("")
-	if err != nil {
-		panic(err)
-	}
-
-	song, err := r.CurrentSong()
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(song)
+	fmt.Println(AddCurrentSongToLibrary())
 }

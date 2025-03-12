@@ -1,7 +1,7 @@
 # cidergo
 
 > [!WARNING]
-> Status: Work in Progress
+> Status: Work in Progress (doesn't work at all as of right now)
 
 This project is under active development and aims to provide a convenient interface for interacting with Cider's RPC/API.
 
