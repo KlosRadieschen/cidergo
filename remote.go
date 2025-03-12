@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 func CheckConnection() error {
@@ -91,5 +90,5 @@ func AddCurrentSongToLibrary() error {
 
 // testing only
 func main() {
-	fmt.Println(AddCurrentSongToLibrary())
+
 }

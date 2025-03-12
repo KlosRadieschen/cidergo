@@ -1,36 +1,35 @@
-# cidergo
+# CiderGo
 
-> [!WARNING]
-> Status: Work in Progress (doesn't work at all as of right now)
+> [!CAUTION]
+> IF YOU MAKE REQUESTS TOO FAST, THE API WILL RESPOND "status: ok" WITHOUT ACTUALLY RETURNING THE VALUE, RESULTING IN A CRASH. This will be fixed soon.
 
-This project is under active development and aims to provide a convenient interface for interacting with Cider's RPC/API.
+A convenient library for interacting with Cider's RPC.
 
 ## Introduction
 
 > [!TIP]
 > [Cider](https://cider.sh) is a client for Apple Music that works on all major operating systems.
 
-CiderGo is designed for developers looking to build applications that control your local Cider app. This library acts as an RPC/API wrapper around the Cider Apple Music client, offering programmatic control over music playback.
+CiderGo is designed for developers looking to build applications that control your local Cider app. This library simplifies interactions with the Cider RPC, offering programmatic control over music playback.
 
 ## Current Features
 
-- **Media Information Retrieval**: Get details about currently playing songs.
-
-yeah, that's it
+This library currently support all endpoints of /api/v1/playback (except for /queue GET).
 
 ## Installation
 
-Install cidergo via `go get`:
+Install CiderGo via `go get`:
 
 ```sh
 go get github.com/klosradieschen/cidergo
 ```
 
-Ensure you have Go installed and properly configured on your system before proceeding with the installation. 
-
 ## Getting Started
 
-Make sure that the Cider RPC client is running under setting -> Connectivity -> Websocket API. As of right now, you have to go to "Manage External Application Access to Cider" (right underneath the Websocket API setting) and disable tokens.
+Make sure that the Cider RPC client is running under Settings -> Connectivity -> Websocket API.
+
+> [!IMPORTANT]
+> As of right now, you have to go to "Manage External Application Access to Cider" (right underneath the Websocket API setting) and ***disable API tokens***.
 
 ## Usage Example
 
@@ -45,12 +44,7 @@ import (
 )
 
 func main() {
-    remote, err := cidergo.Connect("") // Enter a custom port or use "" for the default port (10767)
-    if err != nil {
-        panic(err)
-    }
-
-    song, err := remote.CurrentSong()
+    song, err := cidergo.CurrentSong()
     if err != nil {
         panic(err)
     }
@@ -59,7 +53,11 @@ func main() {
 }
 ```
 
-This example demonstrates how to connect to the Cider client and retrieve information about the current song. You can specify a different port or use an empty string for the default.
+This example demonstrates how to connect to the Cider client and retrieve information about the current song.
+
+## Documentation
+
+The documentation will be added very soon. For now, you can refer to the API documentation, as seen below.
 
 ## API Reference
 
@@ -67,7 +65,7 @@ The documentation for Cider's API can be found [here](https://cider.sh/docs/clie
 
 ## Contributing
 
-We welcome contributions!
+We welcome all contributions!
 
 ## License
 
