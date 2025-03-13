@@ -2,6 +2,7 @@ package cidergo
 
 import (
 	"encoding/json"
+	"time"
 )
 
 // RepeatMode represents the status of repeat, as defined by Apple Music
@@ -15,15 +16,23 @@ const (
 
 // GetRepeat returns the current status of repeat
 func GetRepeat() (RepeatMode, error) {
-	jsonData, err := jsonRequest("repeat-mode")
-	if err != nil {
-		return -1, err
-	}
-
 	data := make(map[string]any)
-	err = json.Unmarshal(jsonData, &data)
-	if err != nil {
-		return -1, err
+
+	// Only waits if it is NOT the first run
+	for firstRun := true; data["value"] == nil; firstRun = false {
+		if !firstRun {
+			time.Sleep(waitDelay)
+		}
+
+		jsonData, err := jsonRequest("repeat-mode")
+		if err != nil {
+			return -1, err
+		}
+
+		err = json.Unmarshal(jsonData, &data)
+		if err != nil {
+			return -1, err
+		}
 	}
 
 	return RepeatMode(data["value"].(float64)), nil

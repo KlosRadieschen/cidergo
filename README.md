@@ -1,8 +1,5 @@
 # CiderGo
 
-> [!CAUTION]
-> IF YOU MAKE REQUESTS TOO FAST, THE API WILL RESPOND "status: ok" WITHOUT ACTUALLY RETURNING THE VALUE, RESULTING IN A CRASH. This will be fixed soon.
-
 A convenient library for interacting with Cider's RPC.
 
 ## Introduction
@@ -14,7 +11,7 @@ CiderGo is designed for developers looking to build applications that control yo
 
 ## Current Features
 
-This library currently support all endpoints of /api/v1/playback.
+This library currently support all endpoints of /api/v1/playback (which is basically all of them).
 
 ## Installation
 
@@ -55,7 +52,7 @@ func main() {
 
 ## Documentation
 
-The documentation can be found on https://pkg.go.dev/github.com/klosradieschen/cidergo
+The Godoc documentation can be found on https://pkg.go.dev/github.com/klosradieschen/cidergo
 
 ## API Reference
 

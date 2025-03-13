@@ -3,19 +3,28 @@ package cidergo
 import (
 	"encoding/json"
 	"errors"
+	"time"
 )
 
 // GetVolume returns the current volume of the client
 func GetVolume() (float64, error) {
-	jsonData, err := jsonRequest("volume")
-	if err != nil {
-		return -1, err
-	}
-
 	data := make(map[string]any)
-	err = json.Unmarshal(jsonData, &data)
-	if err != nil {
-		return -1, err
+
+	// Only waits if it is NOT the first run
+	for firstRun := true; data["value"] == nil; firstRun = false {
+		if !firstRun {
+			time.Sleep(waitDelay)
+		}
+
+		jsonData, err := jsonRequest("volume")
+		if err != nil {
+			return -1, err
+		}
+
+		err = json.Unmarshal(jsonData, &data)
+		if err != nil {
+			return -1, err
+		}
 	}
 
 	return data["volume"].(float64), nil

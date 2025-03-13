@@ -2,6 +2,7 @@ package cidergo
 
 import (
 	"encoding/json"
+	"time"
 )
 
 // AutoplayMode represents the status of autoplay. Unlike Shuffle, it uses booleans instead of integers
@@ -14,15 +15,23 @@ const (
 
 // GetAutoplay gets the current status of autoplay
 func GetAutoplay() (AutoplayMode, error) {
-	jsonData, err := jsonRequest("autoplay")
-	if err != nil {
-		return false, err
-	}
-
 	data := make(map[string]any)
-	err = json.Unmarshal(jsonData, &data)
-	if err != nil {
-		return false, err
+
+	// Only waits if it is NOT the first run
+	for firstRun := true; data["value"] == nil; firstRun = false {
+		if !firstRun {
+			time.Sleep(waitDelay)
+		}
+
+		jsonData, err := jsonRequest("autoplay")
+		if err != nil {
+			return false, err
+		}
+
+		err = json.Unmarshal(jsonData, &data)
+		if err != nil {
+			return false, err
+		}
 	}
 
 	return AutoplayMode(data["value"].(bool)), nil

@@ -3,7 +3,12 @@ package cidergo
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
+
+// waitDelay represents the amount of time (in millisecond) to wait before trying again when a GET request return OK without an actual value.
+// This happens when you use a Toggle/Set function for a feature like shuffle and then instantly use the Get function for that same feature
+var waitDelay = 300 * time.Millisecond
 
 // CheckConnection tries to establish a connection with the Cider RPC. Returns nil when successful
 func CheckConnection() error {
@@ -56,4 +61,15 @@ func JumpToPercentage(percentage int) error {
 // AddCurrentSongToLibrary will add the currently playing song to your Apple Music library
 func AddCurrentSongToLibrary() error {
 	return postRequestNoJson("add-to-library")
+}
+
+// SetWaitDelay changes the waitDelay (default: 300), which represents the amount of time (in millisecond) to wait before trying again when a GET request returns OK without an actual value.
+// This happens when you use a Toggle/Set function for a feature like shuffle and then instantly use the Get function for that same feature.
+// Error only occurs when passing a negative number
+func SetWaitDelay(millis int) error {
+	if millis < 0 {
+		return fmt.Errorf("wait delay cannot be negative: %d", millis)
+	}
+	waitDelay = time.Duration(millis) * time.Millisecond
+	return nil
 }

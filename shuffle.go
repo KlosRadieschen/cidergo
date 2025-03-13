@@ -1,6 +1,9 @@
 package cidergo
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
 // ShuffleMode represents the status of shuffle, as defined by Apple Music
 type ShuffleMode int
@@ -12,15 +15,23 @@ const (
 
 // GetShuffle returns the current status of shuffle
 func GetShuffle() (ShuffleMode, error) {
-	jsonData, err := jsonRequest("shuffle-mode")
-	if err != nil {
-		return -1, err
-	}
-
 	data := make(map[string]any)
-	err = json.Unmarshal(jsonData, &data)
-	if err != nil {
-		return -1, err
+
+	// Only waits if it is NOT the first run
+	for firstRun := true; data["value"] == nil; firstRun = false {
+		if !firstRun {
+			time.Sleep(waitDelay)
+		}
+
+		jsonData, err := jsonRequest("shuffle-mode")
+		if err != nil {
+			return -1, err
+		}
+
+		err = json.Unmarshal(jsonData, &data)
+		if err != nil {
+			return -1, err
+		}
 	}
 
 	return ShuffleMode(data["value"].(float64)), nil
