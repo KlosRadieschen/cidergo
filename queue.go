@@ -37,6 +37,17 @@ func clearQueue() error {
 	return postRequestNoJson("queue/clear-queue")
 }
 
-func GetQueue() {
-	// TODO
+func GetQueue() ([]QueueItem, error) {
+	jsonData, err := jsonRequest("queue")
+	if err != nil {
+		return []QueueItem{}, err
+	}
+
+	var data []QueueItem
+	err = json.Unmarshal(jsonData, &data)
+	if err != nil {
+		return []QueueItem{}, err
+	}
+
+	return data, nil
 }
