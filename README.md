@@ -7,11 +7,11 @@ A convenient library for interacting with Cider's RPC.
 > [!TIP]
 > [Cider](https://cider.sh) is a client for Apple Music that works on all major operating systems.
 
-CiderGo is designed for developers looking to build applications that control your local Cider app. This library simplifies interactions with the Cider RPC, offering programmatic control over music playback.
+CiderGo is designed for developers looking to build applications that control your local Cider app. This library simplifies interactions with the Cider RPC, offering easy control over music playback.
 
 ## Current Features
 
-This library currently support all endpoints of /api/v1/playback (which is basically all of them).
+This library currently support all functional endpoints.
 
 ## Installation
 
@@ -26,9 +26,11 @@ go get github.com/klosradieschen/cidergo
 Make sure that the Cider RPC client is running under Settings -> Connectivity -> Websocket API.
 
 > [!IMPORTANT]
-> As of right now, you have to go to "Manage External Application Access to Cider" (right underneath the Websocket API setting) and ***disable API tokens***.
+> The library will not work when the API token isn't properly configured
 
-## Usage Example
+Right under Websocket API option, you can see "Manage External Application Access to Cider". There, you can either create a new token for your application or disable tokens altogether, in which case the functions will work without using SetToken.
+
+### Usage Example
 
 Here’s a basic example that retrieves the name of the currently playing song:
 
@@ -41,6 +43,8 @@ import (
 )
 
 func main() {
+	cidergo.SetToken("your-token") // Remove this line if you disabled tokens
+	
     song, err := cidergo.CurrentSong()
     if err != nil {
         panic(err)
@@ -49,6 +53,9 @@ func main() {
     fmt.Println(song.Name) // Prints the name of the currently playing song
 }
 ```
+
+> [!WARNING]
+> Some functions like SetShuffle do nothing in some cases, like when you are listening to a station. There is no error handling for it because Cider's API responses for these functions are always the same.
 
 ## Documentation
 
