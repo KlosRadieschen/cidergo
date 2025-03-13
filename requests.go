@@ -27,7 +27,7 @@ func statusRequest(endpoint string) (int, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return 0, err
+		return 0, errors.New("error: Cider is not running or Websocket API is disabled")
 	}
 	defer resp.Body.Close()
 
@@ -51,7 +51,7 @@ func jsonRequest(endpoint string) ([]byte, error) {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error: Cider is not running or Websocket API is disabled")
 	}
 	defer resp.Body.Close()
 
@@ -81,7 +81,7 @@ func postRequest(endpoint string, jsonData []byte) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return errors.New("error: Cider is not running or Websocket API is disabled")
 	}
 	defer resp.Body.Close()
 
@@ -105,7 +105,7 @@ func postRequestNoJson(endpoint string) error {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return errors.New("error: Cider is not running or Websocket API is disabled")
 	}
 	defer resp.Body.Close()
 
