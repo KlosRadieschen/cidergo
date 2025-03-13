@@ -4,7 +4,9 @@ package cidergo
 type ItemType string
 
 const (
-	ItemTypeSong     ItemType = "songs"
-	ItemTypeAlbum    ItemType = "albums"
-	ItemTypePlaylist ItemType = "playlists"
+	ItemTypeSong       ItemType = "songs"
+	ItemTypeAlbum      ItemType = "albums"
+	ItemTypePlaylist   ItemType = "playlists"
+	ItemTypeMusicVideo ItemType = "music-videos"
+	ItemTypeStation    ItemType = "stations"
 )

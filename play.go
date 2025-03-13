@@ -2,7 +2,7 @@ package cidergo
 
 import "encoding/json"
 
-// PlayURL plays and item using its APPLE MUSIC link (not Cider link or song link)
+// PlayURL plays an item using its APPLE MUSIC link (not Cider link or song link)
 func PlayURL(url string) error {
 	data := map[string]string{"url": url}
 	jsonData, _ := json.Marshal(data)
