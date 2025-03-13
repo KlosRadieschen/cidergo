@@ -14,7 +14,7 @@ CiderGo is designed for developers looking to build applications that control yo
 
 ## Current Features
 
-This library currently support all endpoints of /api/v1/playback (except for /queue GET).
+This library currently support all endpoints of /api/v1/playback.
 
 ## Installation
 
@@ -33,7 +33,7 @@ Make sure that the Cider RPC client is running under Settings -> Connectivity ->
 
 ## Usage Example
 
-Here’s how you can get information about the currently playing song:
+Here’s a basic example that retrieves the name of the currently playing song:
 
 ```go
 package main
@@ -49,15 +49,13 @@ func main() {
         panic(err)
     }
 
-    fmt.Println(song) // Prints details about the currently playing song
+    fmt.Println(song.Name) // Prints the name of the currently playing song
 }
 ```
 
-This example demonstrates how to connect to the Cider client and retrieve information about the current song.
-
 ## Documentation
 
-The documentation will be added very soon. For now, you can refer to the API documentation, as seen below.
+The documentation can be found on https://pkg.go.dev/github.com/klosradieschen/cidergo
 
 ## API Reference
 
