@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 )
 
+// RepeatMode represents the status of repeat, as defined by Apple Music
 type RepeatMode int
 
 const (
@@ -12,6 +13,7 @@ const (
 	RepeatModeOn   RepeatMode = 2
 )
 
+// GetRepeat returns the current status of repeat
 func GetRepeat() (RepeatMode, error) {
 	jsonData, err := jsonRequest("repeat-mode")
 	if err != nil {
@@ -27,6 +29,7 @@ func GetRepeat() (RepeatMode, error) {
 	return RepeatMode(data["value"].(float64)), nil
 }
 
+// SetRepeat set repeat to the mode passes as parameter
 func SetRepeat(option RepeatMode) error {
 	currentRepeat, err := GetRepeat()
 	if err != nil {
@@ -47,6 +50,7 @@ func SetRepeat(option RepeatMode) error {
 	return nil
 }
 
+// ToggleRepeat is functionally equivalent to pressing the repeat button inside the client. Turns "off" into "song", "song" into "on" and "on" into "off"
 func ToggleRepeat() error {
 	return postRequestNoJson("toggle-repeat")
 }

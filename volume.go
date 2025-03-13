@@ -5,6 +5,7 @@ import (
 	"errors"
 )
 
+// GetVolume returns the current volume of the client
 func GetVolume() (float64, error) {
 	jsonData, err := jsonRequest("volume")
 	if err != nil {
@@ -20,6 +21,7 @@ func GetVolume() (float64, error) {
 	return data["volume"].(float64), nil
 }
 
+// SetVolume changes the volume of the client to the value passed as parameter (must be between 0 and 1)
 func SetVolume(volume float64) error {
 	data := map[string]float64{"volume": volume}
 	jsonData, _ := json.Marshal(data)
@@ -27,6 +29,8 @@ func SetVolume(volume float64) error {
 	return postRequest("volume", jsonData)
 }
 
+// AdjustVolume adds or subtracts (if negative) the value passed as parameter from the current volume
+// For example, if the current volume is 0.7, AdjustVolume(-0.5) will set it to 0.2
 func AdjustVolume(amount float64) error {
 	currentVolume, err := GetVolume()
 	if err != nil {

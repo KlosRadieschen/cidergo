@@ -10,6 +10,7 @@ import (
 
 const baseURL = "http://0.0.0.0:10767/api/v1/playback/"
 
+// statusRequest performs a GET request to the endpoint passed as parameter and returns the HTML status as int
 func statusRequest(endpoint string) (int, error) {
 	resp, err := http.Get(baseURL + endpoint)
 	if err != nil {
@@ -22,6 +23,7 @@ func statusRequest(endpoint string) (int, error) {
 	return resp.StatusCode, nil
 }
 
+// jsonRequest performs a GET request to the endpoint passed as parameter and returns the JSON received from that request
 func jsonRequest(endpoint string) ([]byte, error) {
 	resp, err := http.Get(baseURL + endpoint)
 	if err != nil {
@@ -39,6 +41,7 @@ func jsonRequest(endpoint string) ([]byte, error) {
 	return body, nil
 }
 
+// postRequest performs a POST request to the endpoint passed as parameter and sends the jsonData (in bytes) passed as parameter
 func postRequest(endpoint string, jsonData []byte) error {
 	req, err := http.NewRequest(http.MethodPost, baseURL+endpoint, bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -59,6 +62,7 @@ func postRequest(endpoint string, jsonData []byte) error {
 	return nil
 }
 
+// postRequest performs a POST request to the endpoint passed as parameter but doesn't send any additional data
 func postRequestNoJson(endpoint string) error {
 	resp, err := http.Post(baseURL+endpoint, "text/plain", nil)
 	if err != nil {

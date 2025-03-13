@@ -2,17 +2,29 @@ package cidergo
 
 import "encoding/json"
 
+// Artwork holds information about an item's artwork. Completeness depends on the item itself, and its container
 type Artwork struct {
-	URL    string `json:"url"`
-	Height int    `json:"height"`
-	Width  int    `json:"width"`
+	URL        string `json:"url"`
+	Width      int    `json:"width"`
+	Height     int    `json:"height"`
+	TextColor1 string `json:"textColor1,omitempty"`
+	TextColor2 string `json:"textColor2,omitempty"`
+	TextColor3 string `json:"textColor3,omitempty"`
+	BgColor    string `json:"bgColor,omitempty"`
+	HasP3      bool   `json:"hasP3,omitempty"`
 }
 
+// PlayParams holds information about an item's parameters. Completeness depends on the item itself, and its container
 type PlayParams struct {
-	ID   string `json:"id"`
-	Kind string `json:"kind"`
+	ID          string `json:"id"`
+	Kind        string `json:"kind"`
+	Format      string `json:"format,omitempty"`
+	StationHash string `json:"stationHash,omitempty"`
+	HasDrm      bool   `json:"hasDrm,omitempty"`
+	MediaType   int    `json:"mediaType,omitempty"`
 }
 
+// Song holds information about a song
 type Song struct {
 	AlbumName  string   `json:"albumName"`
 	ArtistName string   `json:"artistName"`
@@ -46,6 +58,7 @@ type Song struct {
 	RepeatMode  int  `json:"repeatMode"`
 }
 
+// CurrentSong returns the song that is currently playing
 func CurrentSong() (Song, error) {
 	jsonData, err := jsonRequest("now-playing")
 	if err != nil {

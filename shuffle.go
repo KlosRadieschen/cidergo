@@ -2,6 +2,7 @@ package cidergo
 
 import "encoding/json"
 
+// ShuffleMode represents the status of shuffle, as defined by Apple Music
 type ShuffleMode int
 
 const (
@@ -9,6 +10,7 @@ const (
 	ShuffleModeOn  ShuffleMode = 1
 )
 
+// GetShuffle returns the current status of shuffle
 func GetShuffle() (ShuffleMode, error) {
 	jsonData, err := jsonRequest("shuffle-mode")
 	if err != nil {
@@ -24,7 +26,8 @@ func GetShuffle() (ShuffleMode, error) {
 	return ShuffleMode(data["value"].(float64)), nil
 }
 
-func SetShuffleMode(mode ShuffleMode) error {
+// SetShuffle sets shuffle to the mode passes as parameter
+func SetShuffle(mode ShuffleMode) error {
 	currentShuffle, err := GetShuffle()
 	if err != nil {
 		return err
@@ -38,6 +41,7 @@ func SetShuffleMode(mode ShuffleMode) error {
 	return nil
 }
 
+// ToggleShuffle toggles the current state of shuffle
 func ToggleShuffle() error {
 	return postRequestNoJson("toggle-shuffle")
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 )
 
+// AutoplayMode represents the status of autoplay. Unlike Shuffle, it uses booleans instead of integers
 type AutoplayMode bool
 
 const (
@@ -11,6 +12,7 @@ const (
 	AutoplayModeOn  AutoplayMode = true
 )
 
+// GetAutoplay gets the current status of autoplay
 func GetAutoplay() (AutoplayMode, error) {
 	jsonData, err := jsonRequest("autoplay")
 	if err != nil {
@@ -26,7 +28,8 @@ func GetAutoplay() (AutoplayMode, error) {
 	return AutoplayMode(data["value"].(bool)), nil
 }
 
-func SetAutoplayMode(mode AutoplayMode) error {
+// SetAutoplay sets autoplay to the mode passed as parameter
+func SetAutoplay(mode AutoplayMode) error {
 	currentAutoplay, err := GetAutoplay()
 	if err != nil {
 		return err
@@ -40,6 +43,7 @@ func SetAutoplayMode(mode AutoplayMode) error {
 	return nil
 }
 
+// ToggleAutoplay toggles the current state of autoplay
 func ToggleAutoplay() error {
 	return postRequestNoJson("toggle-autoplay")
 }
