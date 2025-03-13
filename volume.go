@@ -23,6 +23,10 @@ func GetVolume() (float64, error) {
 
 // SetVolume changes the volume of the client to the value passed as parameter (must be between 0 and 1)
 func SetVolume(volume float64) error {
+	if volume < 0 || volume > 1 {
+		return errors.New("volume must be between 0 and 1")
+	}
+
 	data := map[string]float64{"volume": volume}
 	jsonData, _ := json.Marshal(data)
 
