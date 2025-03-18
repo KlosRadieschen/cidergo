@@ -1,6 +1,9 @@
 package cidergo
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"slices"
+)
 
 // AddItemToQueue adds and item to the queue, using its ID (for example, Song.PlayParams.ID). ItemType has to be specified!
 // last indicates whether the item is added to the end (false) or start (true) of the queue
@@ -42,7 +45,8 @@ func ClearQueue() error {
 	return postRequestNoJson("queue/clear-queue")
 }
 
-// GetFullQueue returns the entire queue with all the relevant metadata. THE CURRENTLY PLAYING QueueItem IS NOT NECESSARILY AT INDEX 0 (can contain part of the history)
+// GetFullQueue returns the entire queue with all the relevant metadata.
+// THE CURRENTLY PLAYING QueueItem IS NOT NECESSARILY AT INDEX 0 (queue can contain part of the history)
 func GetFullQueue() ([]QueueItem, error) {
 	jsonData, err := jsonRequest("queue")
 	if err != nil {
@@ -56,4 +60,37 @@ func GetFullQueue() ([]QueueItem, error) {
 	}
 
 	return data, nil
+}
+
+// GetSongQueue returns all of the songs in the queue, without the other metadata that GetFullQueue returns.
+// THE CURRENTLY PLAYING Song IS NOT NECESSARILY AT INDEX 0 (queue can contain part of the history)
+func GetSongQueue() ([]Song, error) {
+	queueItems, err := GetFullQueue()
+	if err != nil {
+		return []Song{}, err
+	}
+
+	var songs []Song
+	for _, queueItem := range queueItems {
+		songs = append(songs, queueItem.Song)
+	}
+
+	return songs, nil
+}
+
+// GetCurrentQueueIndex returns the index of the currently playing item in the queue
+func GetCurrentQueueIndex() (int, error) {
+	currentSong, err := CurrentSong()
+	if err != nil {
+		return -1, err
+	}
+
+	songs, err := GetSongQueue()
+	if err != nil {
+		return -1, err
+	}
+
+	return slices.IndexFunc(songs, func(song Song) bool {
+		return song.URL == currentSong.URL
+	}), nil
 }
